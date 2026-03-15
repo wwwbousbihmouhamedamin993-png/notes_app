@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notes_app/router/app_router.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Entry point for the Flutter application.
 /// Initializes Supabase and wraps the app in a [ProviderScope].
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Supabase with the project URL and anonymous key.
   await Supabase.initialize(
     url: 'https://aagltpdlrbsjonpqkfgm.supabase.co',
@@ -18,18 +20,15 @@ void main() async {
 }
 
 /// The root widget of the application.
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routeProvider);
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: Center(
-          child: Text('it works'),
-        ),
-      ),
+      routerConfig: router,
     );
   }
 }
