@@ -11,30 +11,33 @@ part of 'note_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$NoteModel {
 
- String get title; String get description; String get id; String get userId; DateTime get createdAt;
+ String get title; String get description; String get id;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'image_url') String? get imageUrl;
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $NoteModelCopyWith<NoteModel> get copyWith => _$NoteModelCopyWithImpl<NoteModel>(this as NoteModel, _$identity);
 
+  /// Serializes this NoteModel to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteModel&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteModel&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,description,id,userId,createdAt);
+int get hashCode => Object.hash(runtimeType,title,description,id,userId,createdAt,imageUrl);
 
 @override
 String toString() {
-  return 'NoteModel(title: $title, description: $description, id: $id, userId: $userId, createdAt: $createdAt)';
+  return 'NoteModel(title: $title, description: $description, id: $id, userId: $userId, createdAt: $createdAt, imageUrl: $imageUrl)';
 }
 
 
@@ -45,7 +48,7 @@ abstract mixin class $NoteModelCopyWith<$Res>  {
   factory $NoteModelCopyWith(NoteModel value, $Res Function(NoteModel) _then) = _$NoteModelCopyWithImpl;
 @useResult
 $Res call({
- String title, String description, String id, String userId, DateTime createdAt
+ String title, String description, String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'image_url') String? imageUrl
 });
 
 
@@ -62,14 +65,15 @@ class _$NoteModelCopyWithImpl<$Res>
 
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? description = null,Object? id = null,Object? userId = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? description = null,Object? id = null,Object? userId = null,Object? createdAt = null,Object? imageUrl = freezed,}) {
   return _then(_self.copyWith(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -154,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String description,  String id,  String userId,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String description,  String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'image_url')  String? imageUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NoteModel() when $default != null:
-return $default(_that.title,_that.description,_that.id,_that.userId,_that.createdAt);case _:
+return $default(_that.title,_that.description,_that.id,_that.userId,_that.createdAt,_that.imageUrl);case _:
   return orElse();
 
 }
@@ -175,10 +179,10 @@ return $default(_that.title,_that.description,_that.id,_that.userId,_that.create
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String description,  String id,  String userId,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String description,  String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'image_url')  String? imageUrl)  $default,) {final _that = this;
 switch (_that) {
 case _NoteModel():
-return $default(_that.title,_that.description,_that.id,_that.userId,_that.createdAt);case _:
+return $default(_that.title,_that.description,_that.id,_that.userId,_that.createdAt,_that.imageUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +199,10 @@ return $default(_that.title,_that.description,_that.id,_that.userId,_that.create
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String description,  String id,  String userId,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String description,  String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'image_url')  String? imageUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _NoteModel() when $default != null:
-return $default(_that.title,_that.description,_that.id,_that.userId,_that.createdAt);case _:
+return $default(_that.title,_that.description,_that.id,_that.userId,_that.createdAt,_that.imageUrl);case _:
   return null;
 
 }
@@ -207,17 +211,18 @@ return $default(_that.title,_that.description,_that.id,_that.userId,_that.create
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _NoteModel implements NoteModel {
-  const _NoteModel({required this.title, required this.description, required this.id, required this.userId, required this.createdAt});
-  
+  const _NoteModel({required this.title, required this.description, required this.id, @JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'image_url') this.imageUrl});
+  factory _NoteModel.fromJson(Map<String, dynamic> json) => _$NoteModelFromJson(json);
 
 @override final  String title;
 @override final  String description;
 @override final  String id;
-@override final  String userId;
-@override final  DateTime createdAt;
+@override@JsonKey(name: 'user_id') final  String userId;
+@override@JsonKey(name: 'created_at') final  DateTime createdAt;
+@override@JsonKey(name: 'image_url') final  String? imageUrl;
 
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
@@ -225,20 +230,23 @@ class _NoteModel implements NoteModel {
 @pragma('vm:prefer-inline')
 _$NoteModelCopyWith<_NoteModel> get copyWith => __$NoteModelCopyWithImpl<_NoteModel>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$NoteModelToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoteModel&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoteModel&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,description,id,userId,createdAt);
+int get hashCode => Object.hash(runtimeType,title,description,id,userId,createdAt,imageUrl);
 
 @override
 String toString() {
-  return 'NoteModel(title: $title, description: $description, id: $id, userId: $userId, createdAt: $createdAt)';
+  return 'NoteModel(title: $title, description: $description, id: $id, userId: $userId, createdAt: $createdAt, imageUrl: $imageUrl)';
 }
 
 
@@ -249,7 +257,7 @@ abstract mixin class _$NoteModelCopyWith<$Res> implements $NoteModelCopyWith<$Re
   factory _$NoteModelCopyWith(_NoteModel value, $Res Function(_NoteModel) _then) = __$NoteModelCopyWithImpl;
 @override @useResult
 $Res call({
- String title, String description, String id, String userId, DateTime createdAt
+ String title, String description, String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'image_url') String? imageUrl
 });
 
 
@@ -266,14 +274,15 @@ class __$NoteModelCopyWithImpl<$Res>
 
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? description = null,Object? id = null,Object? userId = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? description = null,Object? id = null,Object? userId = null,Object? createdAt = null,Object? imageUrl = freezed,}) {
   return _then(_NoteModel(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
