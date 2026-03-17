@@ -39,7 +39,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               final email = emailController.text;
               final password = passwordController.text;
               try {
-                await ref.read(authProvier.notifier).signIn(email, password);
+                await ref.read(authProvider.notifier).signIn(email, password);
               } catch (e) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(

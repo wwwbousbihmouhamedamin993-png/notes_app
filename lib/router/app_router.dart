@@ -13,7 +13,7 @@ class Routes {
 
 final routeProvider = Provider(
   (ref) {
-    final user = ref.watch(authProvier);
+    final user = ref.watch(authProvider);
     return GoRouter(
       initialLocation: Routes.loginRoute,
       //u can also add error page that if the user went to undefiend route u go to this page using errorBuilder:

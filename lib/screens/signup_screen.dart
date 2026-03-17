@@ -39,7 +39,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               final email = emailController.text;
               final password = passwordController.text;
               try {
-                await ref.read(authProvier.notifier).signUp(email, password);
+                await ref.read(authProvider.notifier).signUp(email, password);
                 if (!context.mounted) return;
               } catch (e) {
                 if (!context.mounted) return;

@@ -51,7 +51,7 @@ class AuthNotifier extends Notifier<User?> {
 }
 
 /// Provider instance for [AuthNotifier].
-final authProvier = NotifierProvider<AuthNotifier, User?>(
+final authProvider = NotifierProvider<AuthNotifier, User?>(
   () {
     return AuthNotifier();
   },
