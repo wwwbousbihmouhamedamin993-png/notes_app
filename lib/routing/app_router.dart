@@ -1,9 +1,9 @@
 import 'package:go_router/go_router.dart';
-import 'package:notes_app/screens/login_screen.dart';
-import 'package:notes_app/screens/signup_screen.dart';
-import 'package:notes_app/screens/home_screen.dart';
+import 'package:notes_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:notes_app/features/auth/presentation/screens/signup_screen.dart';
+import 'package:notes_app/features/notes/presentation/screens/home_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notes_app/providers/auth_provider.dart';
+import 'package:notes_app/features/auth/application/auth_provider.dart';
 
 class Routes {
   static const loginRoute = '/login';

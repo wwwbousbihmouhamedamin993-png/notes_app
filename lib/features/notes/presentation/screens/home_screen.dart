@@ -3,9 +3,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:notes_app/models/note_model.dart';
-import 'package:notes_app/providers/auth_provider.dart';
-import 'package:notes_app/providers/notes_provider.dart';
+import 'package:notes_app/features/notes/domain/models/note_model.dart';
+import 'package:notes_app/features/auth/application/auth_provider.dart';
+import 'package:notes_app/features/notes/application/notes_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

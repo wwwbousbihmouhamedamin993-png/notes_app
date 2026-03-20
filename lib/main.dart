@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notes_app/router/app_router.dart';
+import 'package:notes_app/routing/app_router.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 

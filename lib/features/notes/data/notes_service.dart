@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:notes_app/models/note_model.dart';
+import 'package:notes_app/features/notes/domain/models/note_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NotesService {

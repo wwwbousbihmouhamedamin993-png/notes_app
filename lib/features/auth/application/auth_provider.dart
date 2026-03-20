@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:notes_app/services/auth_service.dart';
+import 'package:notes_app/features/auth/data/auth_service.dart';
 
 /// Provider that exposes an [AuthService] instance.
 final authServiceProvieder = Provider<AuthService>(

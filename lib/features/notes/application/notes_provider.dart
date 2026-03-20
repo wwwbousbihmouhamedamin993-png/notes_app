@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notes_app/models/note_model.dart';
-import 'package:notes_app/services/notes_service.dart';
+import 'package:notes_app/features/notes/domain/models/note_model.dart';
+import 'package:notes_app/features/notes/data/notes_service.dart';
 
 final notesServiceProvider = Provider(
   (ref) => NotesService(),
