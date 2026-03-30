@@ -20,43 +20,58 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       appBar: AppBar(
         title: const Text('signUp'),
       ),
-      body: Column(
-        children: [
-          TextField(
-            controller: emailController,
-            decoration: InputDecoration(
-              hintText: ('enter your email'),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                hintText: ('enter your email'),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
             ),
-          ),
-          TextField(
-            controller: passwordController,
-            decoration: InputDecoration(
-              hintText: 'enter your password',
+            SizedBox(
+              height: 16,
             ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final email = emailController.text;
-              final password = passwordController.text;
-              try {
-                await ref.read(authProvider.notifier).signUp(email, password);
-                if (!context.mounted) return;
-              } catch (e) {
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(e.toString())));
-              }
-            },
-            child: const Text('SignUp'),
-          ),
-          TextButton(
-            onPressed: () {
-              context.go(Routes.loginRoute);
-            },
-            child: const Text('already have an account ? SignIN !!'),
-          ),
-        ],
+            TextField(
+              controller: passwordController,
+              decoration: InputDecoration(
+                hintText: 'enter your password',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final email = emailController.text;
+                final password = passwordController.text;
+                try {
+                  await ref.read(authProvider.notifier).signUp(email, password);
+                  if (!context.mounted) return;
+                } catch (e) {
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(e.toString())));
+                }
+              },
+              child: const Text('SignUp'),
+            ),
+            TextButton(
+              onPressed: () {
+                context.go(Routes.loginRoute);
+              },
+              child: const Text('already have an account ? SignIN !!'),
+            ),
+          ],
+        ),
       ),
     );
   }

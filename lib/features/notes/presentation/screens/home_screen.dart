@@ -35,43 +35,82 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      body: notes.when(
-        error: (error, stackTrace) => Text('error $error'),
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        child: notes.when(
+          error: (error, stackTrace) => Center(
+            key: Key('error'),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error),
+                SizedBox(
+                  height: 5,
+                ),
+                Text('error ${error.toString()}'),
+              ],
+            ),
+          ),
+          loading: () => const Center(
+            key: Key('loading'),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(
+                  height: 5,
+                ),
+                Text('loading ...'),
+              ],
+            ),
+          ),
+          data: (notesList) {
+            return notesList.isEmpty
+                ? Center(
+                    key: Key('empty'),
+                    child: const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.note_add),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text('no notes yet , click + to add note'),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    key: Key('has data'),
+                    itemCount: notesList.length,
+                    itemBuilder: (context, index) {
+                      final note = notesList[index];
+                      return ListTile(
+                        title: Text(note.title),
+                        subtitle: Text(note.description),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () =>
+                                  _showEditSheet(context, ref, note),
+                              icon: Icon(Icons.edit),
+                            ),
+                            IconButton(
+                              onPressed: () async {
+                                await ref
+                                    .read(notesProvider.notifier)
+                                    .deleteNote(note.id);
+                                ref.invalidate(notesProvider);
+                              },
+                              icon: Icon(Icons.delete),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+          },
         ),
-        data: (notesList) {
-          return notesList.isEmpty
-              ? const Center(child: Text('No notes yet'))
-              : ListView.builder(
-                  itemCount: notesList.length,
-                  itemBuilder: (context, index) {
-                    final note = notesList[index];
-                    return ListTile(
-                      title: Text(note.title),
-                      subtitle: Text(note.description),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () => _showEditSheet(context, ref, note),
-                            icon: Icon(Icons.edit),
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              await ref
-                                  .read(notesProvider.notifier)
-                                  .deleteNote(note.id);
-                              ref.invalidate(notesProvider);
-                            },
-                            icon: Icon(Icons.delete),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -154,61 +193,73 @@ void _showAddSheet(BuildContext context, WidgetRef ref) {
   XFile? selectedImage;
 
   showModalBottomSheet(
+    isScrollControlled: true,
     context: context,
     builder: (context) => StatefulBuilder(
       builder: (context, setSheetState) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: titleC,
-              decoration: InputDecoration(hintText: 'note title'),
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 16,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 16,
             ),
-            TextField(
-              controller: descC,
-              decoration: InputDecoration(hintText: 'note description'),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleC,
+                  decoration: InputDecoration(hintText: 'note title'),
+                ),
+                TextField(
+                  controller: descC,
+                  decoration: InputDecoration(hintText: 'note description'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    final image = await ImagePicker().pickImage(
+                      source: ImageSource.gallery,
+                    );
+                    if (image != null) {
+                      setSheetState(
+                        () {
+                          selectedImage = image;
+                        },
+                      );
+                    }
+                  },
+                  child: selectedImage == null
+                      ? Text('enter an image ')
+                      : Text('image picked !'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (titleC.text.isEmpty) return;
+                    if (descC.text.isEmpty) return;
+                    final title = titleC.text;
+                    final description = descC.text;
+                    if (!context.mounted) return;
+                    String? imageUrl;
+                    if (selectedImage != null) {
+                      imageUrl = await ref
+                          .read(notesProvider.notifier)
+                          .uploadImage(File(selectedImage!.path));
+                    }
+                    await ref
+                        .read(notesProvider.notifier)
+                        .addNote(title, description, imageUrl);
+                    if (!context.mounted) {
+                      return;
+                    }
+                    context.pop();
+                    ref.invalidate(notesProvider);
+                  },
+                  child: const Text('add note'),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () async {
-                final image = await ImagePicker().pickImage(
-                  source: ImageSource.gallery,
-                );
-                if (image != null) {
-                  setSheetState(
-                    () {
-                      selectedImage = image;
-                    },
-                  );
-                }
-              },
-              child: selectedImage == null
-                  ? Text('enter an image ')
-                  : Text('image picked !'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (titleC.text.isEmpty) return;
-                final title = titleC.text;
-                final description = descC.text;
-                if (!context.mounted) return;
-                String? imageUrl;
-                if (selectedImage != null) {
-                  imageUrl = await ref
-                      .read(notesProvider.notifier)
-                      .uploadImage(File(selectedImage!.path));
-                }
-                await ref
-                    .read(notesProvider.notifier)
-                    .addNote(title, description, imageUrl);
-                if (!context.mounted) {
-                  return;
-                }
-                context.pop();
-                ref.invalidate(notesProvider);
-              },
-              child: const Text('add note'),
-            ),
-          ],
+          ),
         );
       },
     ),
