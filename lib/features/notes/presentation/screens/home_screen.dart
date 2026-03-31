@@ -133,54 +133,76 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     showModalBottomSheet(
       context: context,
       builder: (context) => StatefulBuilder(
-        builder: (context, setSheetState) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: titleC,
-              decoration: InputDecoration(hintText: 'note title'),
+        builder: (context, setSheetState) => SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 16,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 16,
             ),
-            TextField(
-              controller: descC,
-              decoration: InputDecoration(hintText: 'note description'),
-            ),
-            TextButton(
-              onPressed: () async {
-                final image = await ImagePicker().pickImage(
-                  source: ImageSource.gallery,
-                );
-                if (image != null) {
-                  setSheetState(() {
-                    selectedImage = image;
-                  });
-                }
-              },
-              child: Text(
-                selectedImage == null ? 'Pick Image' : 'Image Selected ✅',
+            child: Padding(
+              padding: EdgeInsets.all(6),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleC,
+                    decoration: InputDecoration(
+                      hintText: 'note ttle',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  TextField(
+                    controller: descC,
+                    decoration: InputDecoration(hintText: 'note description'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final image = await ImagePicker().pickImage(
+                        source: ImageSource.gallery,
+                      );
+                      if (image != null) {
+                        setSheetState(() {
+                          selectedImage = image;
+                        });
+                      }
+                    },
+                    child: AnimatedOpacity(
+                      opacity: selectedImage == null ? 0.1 : 1.0,
+                      duration: Duration(milliseconds: 500),
+                      child: Text(
+                        selectedImage == null ? 'add image' : 'image uploaded!',
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (titleC.text.isEmpty || descC.text.isEmpty) return;
+
+                      String? imageUrl;
+                      if (selectedImage != null) {
+                        imageUrl = await ref
+                            .read(notesProvider.notifier)
+                            .uploadImage(File(selectedImage!.path));
+                      }
+
+                      await ref
+                          .read(notesProvider.notifier)
+                          .editNote(note.id, titleC.text, descC.text, imageUrl);
+
+                      if (!context.mounted) return;
+                      context.pop();
+                      ref.invalidate(notesProvider);
+                    },
+                    child: const Text('update note'),
+                  ),
+                ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                if (titleC.text.isEmpty || descC.text.isEmpty) return;
-
-                String? imageUrl;
-                if (selectedImage != null) {
-                  imageUrl = await ref
-                      .read(notesProvider.notifier)
-                      .uploadImage(File(selectedImage!.path));
-                }
-
-                await ref
-                    .read(notesProvider.notifier)
-                    .editNote(note.id, titleC.text, descC.text, imageUrl);
-
-                if (!context.mounted) return;
-                context.pop();
-                ref.invalidate(notesProvider);
-              },
-              child: const Text('update note'),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -205,59 +227,79 @@ void _showAddSheet(BuildContext context, WidgetRef ref) {
               top: 16,
               bottom: MediaQuery.of(context).viewInsets.bottom + 16,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: titleC,
-                  decoration: InputDecoration(hintText: 'note title'),
-                ),
-                TextField(
-                  controller: descC,
-                  decoration: InputDecoration(hintText: 'note description'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    final image = await ImagePicker().pickImage(
-                      source: ImageSource.gallery,
-                    );
-                    if (image != null) {
-                      setSheetState(
-                        () {
-                          selectedImage = image;
-                        },
+            child: Padding(
+              padding: EdgeInsets.all(6),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleC,
+                    decoration: InputDecoration(
+                      hintText: 'note title',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextField(
+                    controller: descC,
+                    decoration: InputDecoration(
+                      hintText: 'note description',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final image = await ImagePicker().pickImage(
+                        source: ImageSource.gallery,
                       );
-                    }
-                  },
-                  child: selectedImage == null
-                      ? Text('enter an image ')
-                      : Text('image picked !'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (titleC.text.isEmpty) return;
-                    if (descC.text.isEmpty) return;
-                    final title = titleC.text;
-                    final description = descC.text;
-                    if (!context.mounted) return;
-                    String? imageUrl;
-                    if (selectedImage != null) {
-                      imageUrl = await ref
+                      if (image != null) {
+                        setSheetState(
+                          () {
+                            selectedImage = image;
+                          },
+                        );
+                      }
+                    },
+                    child: AnimatedOpacity(
+                      opacity: selectedImage == null ? 1 : 0.5,
+                      duration: Duration(milliseconds: 500),
+                      child: Text(
+                        selectedImage == null ? 'add image' : 'image added !',
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (titleC.text.isEmpty) return;
+                      if (descC.text.isEmpty) return;
+                      final title = titleC.text;
+                      final description = descC.text;
+                      if (!context.mounted) return;
+                      String? imageUrl;
+                      if (selectedImage != null) {
+                        imageUrl = await ref
+                            .read(notesProvider.notifier)
+                            .uploadImage(File(selectedImage!.path));
+                      }
+                      await ref
                           .read(notesProvider.notifier)
-                          .uploadImage(File(selectedImage!.path));
-                    }
-                    await ref
-                        .read(notesProvider.notifier)
-                        .addNote(title, description, imageUrl);
-                    if (!context.mounted) {
-                      return;
-                    }
-                    context.pop();
-                    ref.invalidate(notesProvider);
-                  },
-                  child: const Text('add note'),
-                ),
-              ],
+                          .addNote(title, description, imageUrl);
+                      if (!context.mounted) {
+                        return;
+                      }
+                      context.pop();
+                      ref.invalidate(notesProvider);
+                    },
+                    child: const Text('add note'),
+                  ),
+                ],
+              ),
             ),
           ),
         );
